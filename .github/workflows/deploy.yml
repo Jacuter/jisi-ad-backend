@@ -30,7 +30,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            jisi-backend-cn-beijing.cr.volces.com/jisi-backend:latest
-            jisi-backend-cn-beijing.cr.volces.com/jisi-backend:${{ github.sha }}
+            jisi-backend-cn-beijing.cr.volces.com/jisi-backend/jisi-backend:latest
+            jisi-backend-cn-beijing.cr.volces.com/jisi-backend/jisi-backend:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

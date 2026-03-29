@@ -24,8 +24,9 @@ COPY modules/ ./modules/
 # Copy FastAPI entrypoint (main.py)
 COPY main.py ./
 
-# Pre-login Apify CLI (token injected via env at runtime)
-RUN apify login --token "${APIFY_TOKEN:-dummy}" || true
+# Note: Apify CLI login happens at runtime via `apify login` command
+# The token is injected via the APIFY_TOKEN environment variable at runtime
+# We DON'T pre-login here to avoid build failures due to invalid tokens
 
 # Create data directory
 RUN mkdir -p /app/data
