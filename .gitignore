@@ -1,0 +1,33 @@
+# Dependencies
+ui/node_modules/
+node_modules/
+
+# Build outputs
+ui/.next/
+ui/out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Misc
+*.log
+npm-debug.log*

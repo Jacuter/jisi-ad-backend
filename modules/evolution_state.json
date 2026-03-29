@@ -1,0 +1,76 @@
+{
+  "evolution_log": [
+    {
+      "timestamp": "2026-03-29 11:17:19",
+      "product_url": "https://taliswind.com/en-us/products/four-crystal-guardian-bracelet",
+      "product_title": "Best Seller/ 4-Crystal Guardian Bracelet",
+      "matched_category": "crystal_jewelry",
+      "platform": "meta",
+      "num_variants": 3,
+      "avg_score": 6.2,
+      "best_score": 6.2,
+      "best_hook_type": "numeric",
+      "improvements_made": [],
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-03-29 19:32:14",
+      "category": "crystal_jewelry",
+      "platform": "meta",
+      "num_variants": 3,
+      "avg_score": 6.62,
+      "feedback_score": null
+    },
+    {
+      "timestamp": "2026-03-29 20:01:21",
+      "category": "crystal_jewelry",
+      "platform": "meta",
+      "num_variants": 3,
+      "avg_score": 6.62,
+      "feedback_score": null
+    }
+  ],
+  "pattern_feedback": {
+    "crystal_jewelry_meta_numeric": {
+      "category": "crystal_jewelry",
+      "platform": "meta",
+      "hook_type": "numeric",
+      "effectiveness_score": 6.2,
+      "frequency_used": 1,
+      "last_updated": "2026-03-29 11:17:26"
+    },
+    "crystal_jewelry_meta_authority": {
+      "category": "crystal_jewelry",
+      "platform": "meta",
+      "hook_type": "authority",
+      "effectiveness_score": 6.2,
+      "frequency_used": 1,
+      "last_updated": "2026-03-29 11:17:26"
+    },
+    "crystal_jewelry_meta_social_proof": {
+      "category": "crystal_jewelry",
+      "platform": "meta",
+      "hook_type": "social_proof",
+      "effectiveness_score": 6.414199999999999,
+      "frequency_used": 3,
+      "last_updated": "2026-03-29 20:01:21"
+    },
+    "crystal_jewelry_meta_healing_benefit": {
+      "category": "crystal_jewelry",
+      "platform": "meta",
+      "hook_type": "healing_benefit",
+      "effectiveness_score": 6.619999999999999,
+      "frequency_used": 2,
+      "last_updated": "2026-03-29 20:01:21"
+    },
+    "crystal_jewelry_meta_craftsmanship": {
+      "category": "crystal_jewelry",
+      "platform": "meta",
+      "hook_type": "craftsmanship",
+      "effectiveness_score": 6.619999999999999,
+      "frequency_used": 2,
+      "last_updated": "2026-03-29 20:01:21"
+    }
+  },
+  "saved_at": "2026-03-29 11:17:26"
+}

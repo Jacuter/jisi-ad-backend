@@ -1,0 +1,25 @@
+# .dockerignore — exclude large files from Docker build context
+# Keep only what's needed for the backend
+
+node_modules
+.next
+ui/node_modules
+ui/.next
+ui/app
+ui/public
+ui/package*.json
+ui/tailwind.config.ts
+ui/next-env.d.ts
+ui/tsconfig.json
+ui/postcss.config.js
+ui/.gitignore
+data/*.json           # We'll mount these at runtime
+*.md
+.git
+.gitignore
+deploy/
+node_modules
+tests/
+__pycache__/
+*.pyc
+.DS_Store
