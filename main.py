@@ -9,8 +9,9 @@ Endpoints:
     GET  /evolution    — Get evolution state
 """
 
-import os, sys, json, subprocess, re
+import os, sys, json, time, re
 from pathlib import Path
+from urllib.request import Request, urlopen
 from typing import Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -71,7 +72,7 @@ def _record_evolution(product_url: str, product_title: str, category: str,
     state = _load_evolution_state()
     log = state.setdefault("evolution_log", [])
     log.append({
-        "timestamp": str(subprocess.check_output(["date", "+%Y-%m-%d %H:%M:%S"]).decode().strip()),
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
         "product_url": product_url,
         "product_title": product_title,
         "category": category,
@@ -178,12 +179,23 @@ def generate(req: GenerateRequest):
 
 @app.post("/fetch-ads")
 def fetch_ads(query: str, country: str = "US"):
-    """Fetch competitor ads via Apify CLI."""
+    """Fetch competitor ads via Apify Python SDK."""
     try:
+        from apify_client import ApifyClient
+        
         slug = re.sub(r'[^a-z0-9]+', '_', query.lower()).strip('_')
         out_path = DATA_DIR / f"{slug}_ads.json"
-
-        run_input = json.dumps({
+        
+        # Get token from environment
+        token = os.environ.get("APIFY_TOKEN", "")
+        if not token:
+            raise HTTPException(status_code=500, detail="APIFY_TOKEN environment variable not set")
+        
+        client = ApifyClient(token)
+        actor = client.actor("whoareyouanas~meta-ad-scraper")
+        
+        # Start run
+        run = actor.start(run_input={
             "country": country,
             "searchQuery": query,
             "pageId": "",
@@ -196,29 +208,32 @@ def fetch_ads(query: str, country: str = "US"):
             "maxConcurrency": 1,
             "requestHandlerTimeoutSecs": 900,
         })
+        
+        run_id = run["id"]
+        
+        # Poll until done
+        start = time.time()
+        while time.time() - start < 600:
+            time.sleep(10)
+            r = client.run(run_id).get()
+            status = r.get("status")
+            if status == "SUCCEEDED":
+                break
+            elif status in ["FAILED", "ABORTED", "ERROR"]:
+                raise HTTPException(status_code=500, detail=f"Apify run failed: {status}")
+        
+        # Get results
+        dataset_id = r.get("storageIds", {}).get("datasets", {}).get("default")
+        if not dataset_id:
+            raise HTTPException(status_code=500, detail="No dataset returned")
+        
+        items = list(client.dataset(dataset_id).iterate_items())
+        out_path.write_text(json.dumps(items, indent=2))
+        
+        return {"success": True, "query": query, "count": len(items), "saved_to": str(out_path)}
 
-        result = subprocess.run(
-            ["apify", "call", "whoareyouanas/meta-ad-scraper", "--silent", "--output-dataset"],
-            input=run_input,
-            capture_output=True,
-            text=True,
-            timeout=600,
-        )
-
-        if result.returncode != 0:
-            raise HTTPException(status_code=500, detail=f"Apify failed: {result.stderr[:200]}")
-
-        raw = result.stdout.strip()
-        if not raw:
-            raise HTTPException(status_code=500, detail="Apify returned empty output")
-
-        ads = json.loads(raw)
-        out_path.write_text(json.dumps(ads, indent=2))
-
-        return {"success": True, "query": query, "count": len(ads), "saved_to": str(out_path)}
-
-    except subprocess.TimeoutExpired:
-        raise HTTPException(status_code=504, detail="Apify fetch timed out")
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
